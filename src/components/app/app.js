@@ -9,23 +9,33 @@ import { SwapiProvider } from '../swapi-service-context';
 import './app.css';
 import ErrorBoundry from '../error-boundry/error-boundry';
 import SwapiService from '../../service/swapiService';
+import DummySwapiService from '../../service/dummy-swapi-service'
 
 export default class App extends Component {
   
-  swapi = new SwapiService();
+  
 
   state = {
-    selectedPerson: 2
+    selectedPerson: 2,
+    swapi: new DummySwapiService()
   }
 
-  
+  onSwapiChange = () => {
+    console.log('working');
+    this.setState( ({swapi}) => {
+      let service = swapi instanceof SwapiService ? DummySwapiService : SwapiService;
+        return {
+          swapi: new service()
+        }
+    })
+  }
 
   render() {
     return (
       <ErrorBoundry>
-        <SwapiProvider value={this.swapi}>
+        <SwapiProvider value={this.state.swapi}>
         <div className="container">
-          <Header />
+          <Header onSwapiChange={this.onSwapiChange}/>
           <RandomPlanet />
           <PersonsList /> 
           <PlanetsList />

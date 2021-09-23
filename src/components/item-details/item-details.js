@@ -10,7 +10,8 @@ export default class ItemDetails extends Component {
 
   state = {
     item: null,
-    loading: true
+    loading: true,
+    image:null
   }
 
   updatePerson = async () => {
@@ -19,7 +20,8 @@ export default class ItemDetails extends Component {
     const item = await this.props.getData(id);
     this.setState({
       item,
-      loading:false
+      loading:false,
+      image: this.props.getImgUrl(id)
     })
   }
 
@@ -28,12 +30,12 @@ export default class ItemDetails extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.itemId !== prevProps.itemId) 
+    if (this.props.itemId !== prevProps.itemId || this.props.getData !== prevProps.getData ) 
     this.updatePerson();
   }
  
   render() {
-    const { item, loading  } = this.state;
+    const { item, loading, image } = this.state;
     if (loading) return <Spinner />
     if (item === null) return (<span>Chose person</span>)
     const { name } = item;
@@ -41,7 +43,7 @@ export default class ItemDetails extends Component {
       <div className="person-details card">
         <img className="person-image"
         alt="text"
-          src={this.props.getImgUrl(this.props.itemId)} />
+          src={image} />
 
         <div className="card-body">
           <h4>{name}</h4>

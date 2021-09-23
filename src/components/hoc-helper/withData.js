@@ -8,10 +8,20 @@ const WithData = (View) => {
     items: null
   }
   
-  componentDidMount = async () => {
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.getData !== this.props.getData) {
+      this.update();
+    }
+  }
+
+  componentDidMount =  () => {
+    this.update();
+  }
+
+  update = async () => {
     const items = await this.props.getData();
     this.setState({items});
-  }
+  } 
 
     render(){
       const {items} = this.state;

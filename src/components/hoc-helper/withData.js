@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Spinner from '../spinner';
 
 
-const WithData = (View, getData) => {
+const WithData = (View) => {
   return class extends Component {
     state = {
     items: null
   }
   
   componentDidMount = async () => {
-    const items = await getData();
+    const items = await this.props.getData();
     this.setState({items});
   }
 

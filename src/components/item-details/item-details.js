@@ -14,7 +14,7 @@ export default class ItemDetails extends Component {
   }
 
   updatePerson = async () => {
-    const id = this.props.id;
+    const id = this.props.itemId;
     if (!id) return; 
     const item = await this.props.getData(id);
     this.setState({
@@ -28,13 +28,12 @@ export default class ItemDetails extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.id !== prevProps.id) 
+    if (this.props.itemId !== prevProps.itemId) 
     this.updatePerson();
   }
  
   render() {
     const { item, loading  } = this.state;
-    
     if (loading) return <Spinner />
     if (item === null) return (<span>Chose person</span>)
     const { name } = item;
@@ -42,7 +41,7 @@ export default class ItemDetails extends Component {
       <div className="person-details card">
         <img className="person-image"
         alt="text"
-          src={this.props.getImgUrl} />
+          src={this.props.getImgUrl(this.props.itemId)} />
 
         <div className="card-body">
           <h4>{name}</h4>

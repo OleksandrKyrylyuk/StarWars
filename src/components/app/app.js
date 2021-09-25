@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
+import {StarshipsDetails} from '../sw-component'
 import Header from '../header';
 import RandomPlanet from '../random-planet';
 import  {PersonsPage, PlanetsPage, StarshipsPage}  from '../peges'
@@ -31,15 +33,22 @@ export default class App extends Component {
     return (
       <ErrorBoundry>
         <SwapiProvider value={this.state.swapi}>
-        <div className="container">
-
-          <Header onSwapiChange={this.onSwapiChange}/>
-
-          <RandomPlanet />
-          <PersonsPage />
-          <PlanetsPage />
-          <StarshipsPage />
-        </div>
+        <Router>
+          <div className="container">
+            <Header onSwapiChange={this.onSwapiChange}/>
+            <RandomPlanet />
+            <Route path="/" exact render={ () => {return (<h2>StarDB home</h2>)}}/>
+            <Route path="/people/:id?" component={PersonsPage}/>
+            <Route path="/planet/" component={PlanetsPage}/>
+            <Route path="/starship/" exact component={StarshipsPage}/>
+            <Route path="/starship/:id" render={
+              ({match}) => {
+                const { id } = match.params;
+                return (<StarshipsDetails itemId={id} />)
+              }
+            }/>
+          </div>
+        </Router>
       </SwapiProvider>
     </ErrorBoundry>
   );

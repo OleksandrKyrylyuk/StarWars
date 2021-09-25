@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import ErrorButton from '../error-button/error-button';
+import ErrorIndicator from '../error-indicator';
 import Spinner from '../spinner';
 
 
@@ -10,19 +11,27 @@ export default class ItemDetails extends Component {
 
   state = {
     item: null,
-    loading: true,
-    image:null
+    loading: false,
+    image:null,
+    error: false
   }
 
   updatePerson = async () => {
     const id = this.props.itemId;
     if (!id) return; 
-    const item = await this.props.getData(id);
-    this.setState({
+    
+    try {
+      const item = await this.props.getData(id);
+      this.setState({
       item,
       loading:false,
       image: this.props.getImgUrl(id)
     })
+    }
+    catch {
+      this.setState({error: true})
+    }
+
   }
 
   componentDidMount(){
@@ -30,12 +39,15 @@ export default class ItemDetails extends Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.itemId !== prevProps.itemId || this.props.getData !== prevProps.getData ) 
-    this.updatePerson();
+    if (this.props.itemId !== prevProps.itemId || this.props.getData !== prevProps.getData ) {
+      this.updatePerson();
+      this.setState({loading:true})
+    }
   }
  
   render() {
-    const { item, loading, image } = this.state;
+    const { item, loading, image, error } = this.state;
+    if (error) return <ErrorIndicator />
     if (loading) return <Spinner />
     if (item === null) return (<span>Chose person</span>)
     const { name } = item;
